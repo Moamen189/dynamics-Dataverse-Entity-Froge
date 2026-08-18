@@ -8,6 +8,7 @@ function generateCode_ODataJSON(escape) {
         // Skip fields with null or undefined values
         if (attribute.value !== null && attribute.value !== undefined) {
             // Handle different field types
+            // See https://learn.microsoft.com/en-us/power-apps/developer/data-platform/webapi/attribute-types-entity-attributes?tabs=webapi#attribute-types
             switch (attribute.type) {
                 case "string":
                     lines.push({
