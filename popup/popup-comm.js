@@ -1,6 +1,9 @@
 /*document.getElementById("getEntity").addEventListener("click", async () => {
     workerRequest("GetBasicAttributes");
 });*/
+//document.getElementById("getEntityWithDetails").addEventListener("click", async () => {
+//    workerRequest("GetAttributesWithDetails");
+//});
 
 async function workerRequest(requestType) {
     const [tab] = await chrome.tabs.query({
