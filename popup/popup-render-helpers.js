@@ -7,17 +7,16 @@ function capitalizeFirstLetter(val) {
 }
 
 function refreshJsonButton() {
-    const jsonBtn = document.getElementById("json-loading-btn");
-    const text = jsonBtn.querySelector(".spinnerText");
-    const spinner = jsonBtn.querySelector(".spinner");
+    const jsonBtn = document.getElementById("formatBtnJSON");
+    const spinner = document.getElementById("jsonSpinner");
+
+    if (!jsonBtn || !spinner) return;
 
     if (entityGenState.entitySetMappings) {
         spinner.hidden = true;
-        text.classList.remove("disabledText");
         jsonBtn.disabled = false;
     } else {
         spinner.hidden = false;
-        text.classList.add("disabledText");
         jsonBtn.disabled = true;
     }
 }
@@ -65,4 +64,69 @@ function isValidPage(urlParams) {
 function hideWelcome() {
     document.getElementById("welcomePage").style.display = "none";
     document.getElementById("mainPage").style.display = "block";
+}
+
+function showWelcome() {
+    document.getElementById("welcomePage").style.display = "block";
+    document.getElementById("mainPage").style.display = "none";
+}
+
+function setConnectionStatus(state, label, desc) {
+    const banner = document.getElementById("statusBanner");
+    const labelEl = document.getElementById("statusLabel");
+    const descEl = document.getElementById("statusDesc");
+
+    if (!banner) return;
+
+    banner.className = `status-banner status-${state}`;
+    if (labelEl) labelEl.textContent = label || "";
+    if (descEl) descEl.textContent = desc || "";
+}
+
+function showLoadingOverlay(message) {
+    const overlay = document.getElementById("loadingOverlay");
+    if (!overlay) return;
+
+    const textEl = overlay.querySelector(".loading-text");
+    if (textEl) textEl.textContent = message || "Generating entity...";
+    overlay.hidden = false;
+}
+
+function hideLoadingOverlay() {
+    const overlay = document.getElementById("loadingOverlay");
+    if (overlay) overlay.hidden = true;
+}
+
+function setActionButtonsEnabled(enabled) {
+    const copyBtn = document.getElementById("copyCode");
+    const dlCS = document.getElementById("downloadCS");
+    const dlJSON = document.getElementById("downloadJSON");
+
+    if (copyBtn) copyBtn.disabled = !enabled;
+    if (dlCS) dlCS.disabled = !enabled;
+    if (dlJSON) dlJSON.disabled = !enabled;
+}
+
+function updateFormatTabs(activeFormat) {
+    document.querySelectorAll(".seg-btn.setFormatBtn").forEach((btn) => {
+        const fmt = btn.getAttribute("data-format");
+        if (fmt === activeFormat) {
+            btn.classList.add("seg-active");
+            btn.setAttribute("aria-selected", "true");
+        } else {
+            btn.classList.remove("seg-active");
+            btn.setAttribute("aria-selected", "false");
+        }
+    });
+}
+
+function switchHljsTheme(theme) {
+    const link = document.getElementById("hljs-theme");
+    if (!link) return;
+
+    if (theme === "dark") {
+        link.href = "highlight/github-dark.min.css";
+    } else {
+        link.href = "highlight/github.min.css";
+    }
 }

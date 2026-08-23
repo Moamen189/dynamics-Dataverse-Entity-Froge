@@ -1,14 +1,7 @@
 function signalStatus(buttonId, status) {
-    const btn = document.getElementById(buttonId);
-
-    const prevContent = btn.innerHTML;
-    if (status == "SUCCESS") {
-        btn.innerHTML = "✅ Ok!";
+    if (status === "SUCCESS") {
+        showToast("Copied to clipboard", "success");
     } else {
-        btn.innerHTML = "😢 Something went wrong :(";
+        showToast("Failed to copy to clipboard", "error");
     }
-
-    setTimeout(() => {
-        btn.innerHTML = prevContent;
-    }, 1000);
 }

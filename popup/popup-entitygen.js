@@ -21,6 +21,15 @@ function render() {
 
     setCodeOutput(entityGenState.generatedCodeToRender);
     setTitle();
+
+    // Enable action buttons now that we have output
+    setActionButtonsEnabled(!!entityGenState.generatedCode);
+
+    // Update format tabs to reflect current selection
+    updateFormatTabs(entityGenState.format);
+
+    // Hide loading after render
+    hideLoadingOverlay();
 }
 
 function generateCode(escape) {
@@ -35,8 +44,15 @@ function generateCode(escape) {
 
 function setCodeOutput(code) {
     const el = document.getElementById("codeOutput");
-    el.innerHTML = code;
+    if (!el) return;
+
+    el.innerHTML = code || "";
     delete el.dataset.highlighted;
+
+    // Switch hljs theme based on current data-theme
+    const currentTheme =
+        document.documentElement.getAttribute("data-theme") || "light";
+    switchHljsTheme(currentTheme);
 
     hljs.highlightAll();
 }
@@ -47,6 +63,7 @@ function setTitle() {
             ? entityGenState.entityName
             : capitalizeFirstLetter(entityGenState.entityName);
 
-        document.getElementById("entityName").innerHTML = title;
+        const el = document.getElementById("entityName");
+        if (el) el.textContent = title;
     }
 }

@@ -1,76 +1,71 @@
-# Dynamics EntityGen
+# Dataverse Entity Forge
 
-A simple Chrome/Edge plugin which allows you to easily generate Unit Test data.
+A professional Chrome/Edge browser extension for generating C# entity code, JSON, and test data from Microsoft Dataverse / Dynamics 365 forms.
 
-![Screenshot of the pluigin](screenshot.png)
+![Screenshot of the extension](screenshot.png)
+
+## Features
+
+- **C# Entity Generation** — Generate ready-to-use C# `Entity` initialization code for unit tests
+- **JSON Generation** — Generate OData-compatible JSON from entity attributes
+- **Copy to Clipboard** — One-click copy of generated output
+- **Download C# Files** — Download generated C# code as `.cs` files
+- **Download JSON Files** — Download generated JSON as `.json` files
+- **Form Fields Mode** — Generate from fields currently on the form
+- **All Fields Mode** — Generate from all available entity attributes
+- **Non-null Filter** — Exclude fields without values
+- **Dark Mode** — Professional dark theme with persistence
+- **Automatic Detection** — Detects Dataverse entity forms automatically
+
+## Supported Field Types
+
+String, Boolean, Money, Decimal, Integer, Double, Lookup, OptionSet, MultiSelect OptionSet, DateTime, Memo, File, Image
 
 ## Installation
 
--   Clone repo locally
--   Go to `chrome://extensions`
--   Enable **Developer mode**
--   Click **Load Unpacked**
--   Find the cloned folder
--   Pin the extension to the toolbar
+1. Clone or download this repository
+2. Open your browser and go to `chrome://extensions` (Chrome) or `edge://extensions` (Edge)
+3. Enable **Developer mode**
+4. Click **Load Unpacked**
+5. Select the cloned/downloaded folder
+6. Pin **Dataverse Entity Forge** to the toolbar for quick access
 
 ## Usage
 
-When on Dynamics Form, click on the plugin icon. The generated C# code will show, allowing you to copy it with a click of a button.
+1. **Navigate** to a Dynamics 365 / Dataverse entity record form
+2. **Click** the Dataverse Entity Forge extension icon in your toolbar
+3. **Choose** your output format: **C#** or **JSON**
+4. **Select** field scope: **Form fields** (default) or **All fields**
+5. **Toggle** the "Non-null only" filter if needed
+6. **Review** the generated output in the code area
+7. **Copy** to clipboard or **Download** as a `.cs` / `.json` file
 
-## TODO
+## Dark Mode
 
--   [ ] Test and fix Partylist type
--   [ ] Change format to JSON - so that it works with OData too.
--   [x] Test all field types - what fields are there? (TODO)
--   [x] Reliability - when opened on another site / not on form
--   [x] Reliability - when on form, but not connected to worker
+Click the sun/moon icon in the header to toggle between light and dark themes. Your preference is automatically saved and persists across sessions.
 
-## Planned actions
+## Download
 
--   [x] Generate an entity when opened
-    -   [x] All field types work - what fields are there? (TODO)
--   Change format to JSON - so that it works with OData too.
--   Add null fields if you want
--   Add all fields, not just the ones on the form
--   [x] Add only fields on the current form - that's by default
--   Intercept request and get the grid FetchXml
--   Enter custom FetchXml and have that converted into
--   Relationships data generator
+Generated files are named using the entity logical name:
 
-### How it works: Generate a C# Entity
+- `account-test-data.cs`
+- `contact-test-data.json`
 
--   Worker Request: GetBasicAttributes
--   Worker returns all attributes
--   popup-entitygen creates the entity and adds it to the textarea on the popup
--   Has its own state - stores the attributes and exposes one method: render()
-    -   entityname
-    -   attributes
-    -   nonNull - true/false
-    -   haveAllAttributes - true/false - if all attributes have been fetched
--   User can click "Copy" button and that copies the script to the clipboard
+If the entity name is unavailable, files are named `dataverse-entity-test-data.<ext>`.
 
--   This is also run on start
+## How It Works
 
-### How it works: Change format to JSON
+1. The extension injects a worker script into the Dynamics 365 page
+2. The worker reads entity metadata via `Xrm.Page`
+3. Attributes are forwarded to the popup via Chrome messaging
+4. The popup generates C# or JSON from the retrieved attributes
+5. Entity set mappings are fetched from the Dataverse metadata API for JSON lookup resolution
 
--   Must have called "Generate a C# Entity" before so that the attributes exist.
--   Get the attributes from the popup
--   Generate the JSON from the attributes - basically just JSON.stringify with indent
+## Browser Compatibility
 
-### How it works: Only non-null
+- Google Chrome
+- Microsoft Edge
 
--   Must have called "Generate a C# Entity" before
--   sets the state, calls render() again
+## License
 
-### How it works: Only form fields
-
--   This is a default
-
-### How it works: All fields
-
--   If haveAllAttributes is already set, no action
--   Else, ask the worker to get all the fields, return them, rerender.
-
-### How it works: Intercept request and get the grid FetchXml
-
--   Worker does this by default. Then it depends if
+See [LICENSE](LICENSE) file.

@@ -1,50 +1,139 @@
 (() => {
+    // Initialize theme first to avoid flash
+    ThemeManager.initTheme().then(() => {
+        const theme =
+            document.documentElement.getAttribute("data-theme") || "light";
+        switchHljsTheme(theme);
+    });
+
+    // Set initial status
+    setConnectionStatus(
+        "loading",
+        "Connecting...",
+        "Looking for a Dataverse form"
+    );
+
     // Is this even Dynamics?
-    workerRequest("GetBasicAttributes");
+    try {
+        workerRequest("GetBasicAttributes");
+    } catch (err) {
+        console.error("Worker request failed:", err);
+        setConnectionStatus(
+            "error",
+            "Connection unavailable",
+            "Unable to communicate with the extension worker"
+        );
+    }
 })();
 
 function enableButtons() {
+    // Copy button
     document.getElementById("copyCode").addEventListener(
         "click",
         () => {
+            if (!entityGenState.generatedCode) {
+                showToast("Generate an entity first", "info");
+                return;
+            }
             navigator.clipboard
                 .writeText(entityGenState.generatedCode)
                 .then(() => {
                     signalStatus("copyCode", "SUCCESS");
                 })
                 .catch((err) => {
-                    console.error("🚨 Clipboard write failed:", err);
+                    console.error("Clipboard write failed:", err);
                     signalStatus("copyCode", "ERROR");
                 });
         },
         false
     );
 
+    // Format tabs
     document.querySelectorAll(".setFormatBtn").forEach((btn) => {
         btn.addEventListener(
             "click",
             ({ target }) => {
-                debugger;
-                const format = target.attributes["data-format"]
-                    ? target.attributes["data-format"].value
-                    : target.parentElement.attributes["data-format"].value;
+                const format = target.closest("[data-format]")
+                    ? target.closest("[data-format]").getAttribute("data-format")
+                    : null;
+
+                if (!format || btn.disabled) return;
+
                 entityGenState.format = format;
                 render();
             },
             false
         );
     });
+
+    // Download C# button
+    document.getElementById("downloadCS").addEventListener("click", () => {
+        DownloadHelper.downloadCS();
+    });
+
+    // Download JSON button
+    document.getElementById("downloadJSON").addEventListener("click", () => {
+        DownloadHelper.downloadJSON();
+    });
+
+    // Theme toggle
+    document.getElementById("themeToggle").addEventListener("click", () => {
+        ThemeManager.toggleTheme().then(() => {
+            const theme =
+                document.documentElement.getAttribute("data-theme") || "light";
+            switchHljsTheme(theme);
+
+            // Re-render code with new hljs theme if code exists
+            if (entityGenState.generatedCodeToRender) {
+                setCodeOutput(entityGenState.generatedCodeToRender);
+            }
+        });
+    });
+
+    // Field scope radios
+    const formRadio = document.getElementById("fieldScopeForm");
+    const allRadio = document.getElementById("fieldScopeAll");
+
+    if (formRadio) {
+        formRadio.addEventListener("change", () => {
+            if (formRadio.checked) {
+                entityGenState.onlyFormFields = true;
+                entityGenState.hasAllFields = false;
+                render();
+            }
+        });
+    }
+
+    if (allRadio) {
+        allRadio.addEventListener("change", () => {
+            if (allRadio.checked) {
+                entityGenState.onlyFormFields = false;
+                if (!entityGenState.hasAllFields) {
+                    showLoadingOverlay("Reading all entity attributes...");
+                    workerRequest("GetBasicAttributes");
+                } else {
+                    render();
+                }
+            }
+        });
+    }
+
+    // Non-null checkbox
+    const nonNullCheck = document.getElementById("nonNullCheck");
+    if (nonNullCheck) {
+        nonNullCheck.addEventListener("change", () => {
+            entityGenState.onlyNonNull = nonNullCheck.checked;
+            render();
+        });
+    }
 }
 
 async function checkMetadata(origin) {
-    // CHECK METADATA
     let metadata = await EntityMetadataCache.getMetadata(origin);
     if (!metadata) {
-        // Get new data and cache
         workerRequest("GetMetadata");
     } else {
         console.log("Metadata - ", metadata);
-        // Cached Data
         setEntitygenMetadata(metadata);
     }
 }
@@ -62,6 +151,11 @@ function newDataAvailable(response) {
         const { entityName, entityId, attributes, params, origin } = response;
 
         if (!isValidPage(params)) {
+            setConnectionStatus(
+                "disconnected",
+                "Not connected",
+                "Open a Dataverse form to generate data"
+            );
             return;
         }
 
@@ -69,8 +163,13 @@ function newDataAvailable(response) {
         entityGenState.entityId = entityId;
         entityGenState.attributes = attributes;
 
-        render();
+        setConnectionStatus(
+            "connected",
+            "Connected",
+            "Dataverse form detected"
+        );
 
+        render();
         enableButtons();
         hideWelcome();
 
@@ -79,9 +178,8 @@ function newDataAvailable(response) {
 
     if (response.type === "GetMetadata") {
         const metadataResponse = response;
-        debugger;
         EntityMetadataCache.setMetadata(
-            metadataResponse.origin, // Dynamics URL - xxx.crmXX.dynamics.com
+            metadataResponse.origin,
             metadataResponse.metadata
         );
         setEntitygenMetadata(metadataResponse.metadata);

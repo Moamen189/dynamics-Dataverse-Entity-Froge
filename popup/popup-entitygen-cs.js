@@ -138,6 +138,11 @@ ${attribute.value
                     });
                     break;
             }
+        } else if (!entityGenState.onlyNonNull) {
+            lines.push({
+                fieldName: attribute.name,
+                formattedValue: "null",
+            });
         }
     }
 
