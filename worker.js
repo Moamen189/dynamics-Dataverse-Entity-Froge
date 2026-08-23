@@ -1,11 +1,8 @@
 // alert("Hey! Hello from WORKER");
 
 window.addEventListener("message", (event) => {
-    // console.log("[worker] Receiving", event);
     if (event.data && event.data.EntityGeneratorRequest) {
         const requestType = event.data.type;
-
-        // console.log("[worker] Processing", requestType);
 
         const response = {
             EntityGeneratorResponse: true,
@@ -38,7 +35,6 @@ window.addEventListener("message", (event) => {
                     response.attributes.push(newAttr);
                 }
             } catch (e) {
-                // console.log("[worker] Exception :(", e);
             }
         }
 
@@ -58,7 +54,6 @@ window.addEventListener("message", (event) => {
         if (requestType == "GetAllFieldsAndPost") {
         }
 
-        // console.log("[worker] Posting", response);
         window.postMessage(response, "*");
     }
 });
