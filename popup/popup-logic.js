@@ -17,7 +17,6 @@
     try {
         workerRequest("GetBasicAttributes");
     } catch (err) {
-        console.error("Worker request failed:", err);
         setConnectionStatus(
             "error",
             "Connection unavailable",
@@ -41,7 +40,7 @@ function enableButtons() {
                     signalStatus("copyCode", "SUCCESS");
                 })
                 .catch((err) => {
-                    console.error("Clipboard write failed:", err);
+                    // console.error("Clipboard write failed:", err);
                     signalStatus("copyCode", "ERROR");
                 });
         },
@@ -133,7 +132,7 @@ async function checkMetadata(origin) {
     if (!metadata) {
         workerRequest("GetMetadata");
     } else {
-        console.log("Metadata - ", metadata);
+        // console.log("Metadata - ", metadata);
         setEntitygenMetadata(metadata);
     }
 }

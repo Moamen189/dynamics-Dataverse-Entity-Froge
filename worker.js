@@ -38,7 +38,7 @@ window.addEventListener("message", (event) => {
                     response.attributes.push(newAttr);
                 }
             } catch (e) {
-                console.log("[worker] Exception :(", e);
+                // console.log("[worker] Exception :(", e);
             }
         }
 
@@ -58,7 +58,7 @@ window.addEventListener("message", (event) => {
         if (requestType == "GetAllFieldsAndPost") {
         }
 
-        console.log("[worker] Posting", response);
+        // console.log("[worker] Posting", response);
         window.postMessage(response, "*");
     }
 });

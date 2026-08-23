@@ -29,7 +29,6 @@ const DownloadHelper = (() => {
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         } catch (err) {
-            console.error("Download failed:", err);
             showToast("Download failed", "error");
         }
     }

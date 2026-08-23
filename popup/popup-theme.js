@@ -43,7 +43,6 @@ const ThemeManager = (() => {
         return new Promise((resolve) => {
             chrome.storage.local.get([STORAGE_KEY], (result) => {
                 if (chrome.runtime.lastError) {
-                    console.warn("Theme load failed:", chrome.runtime.lastError);
                     resolve("light");
                     return;
                 }
@@ -56,7 +55,6 @@ const ThemeManager = (() => {
         return new Promise((resolve) => {
             chrome.storage.local.set({ [STORAGE_KEY]: theme }, () => {
                 if (chrome.runtime.lastError) {
-                    console.warn("Theme save failed:", chrome.runtime.lastError);
                 }
                 resolve();
             });
