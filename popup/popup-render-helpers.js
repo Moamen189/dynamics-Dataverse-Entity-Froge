@@ -98,13 +98,15 @@ function hideLoadingOverlay() {
 }
 
 function setActionButtonsEnabled(enabled) {
-    const copyBtn = document.getElementById("copyCode");
-    const dlCS = document.getElementById("downloadCS");
-    const dlJSON = document.getElementById("downloadJSON");
+    const copyBtn   = document.getElementById("copyCode");
+    const dlCS      = document.getElementById("downloadCS");
+    const dlJSON    = document.getElementById("downloadJSON");
+    const previewBtn = document.getElementById("previewBtn");
 
-    if (copyBtn) copyBtn.disabled = !enabled;
-    if (dlCS) dlCS.disabled = !enabled;
-    if (dlJSON) dlJSON.disabled = !enabled;
+    if (copyBtn)    copyBtn.disabled    = !enabled;
+    if (dlCS)       dlCS.disabled       = !enabled;
+    if (dlJSON)     dlJSON.disabled     = !enabled;
+    if (previewBtn) previewBtn.disabled = !enabled;
 }
 
 function updateFormatTabs(activeFormat) {

@@ -125,6 +125,14 @@ function enableButtons() {
             render();
         });
     }
+
+    // Preview button
+    const previewBtn = document.getElementById("previewBtn");
+    if (previewBtn) {
+        previewBtn.addEventListener("click", () => {
+            PreviewManager.open();
+        }, false);
+    }
 }
 
 async function checkMetadata(origin) {
