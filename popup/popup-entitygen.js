@@ -2,6 +2,7 @@ const entityGenState = {
     attributes: [],
     entityName: null,
     entityId: null,
+    origin: null,
 
     generatedCode: null,
     generatedCodeToRender: null,

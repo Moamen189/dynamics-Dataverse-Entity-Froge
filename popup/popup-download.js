@@ -6,10 +6,27 @@ const DownloadHelper = (() => {
         return name.replace(UNSAFE_CHARS, "").replace(/\s+/g, "-").toLowerCase();
     }
 
+    function getEnvironmentName(originOrUrl) {
+        if (!originOrUrl) return "";
+        try {
+            let host = originOrUrl;
+            if (host.includes("://")) {
+                host = new URL(host).hostname;
+            }
+            const env = host.split(".")[0];
+            return env || "";
+        } catch (e) {
+            return "";
+        }
+    }
+
     function generateFilename(entityName, format) {
         const safeName = sanitizeFilename(entityName);
         const ext = format === "cs" ? "cs" : "json";
-        return `${safeName}-test-data.${ext}`;
+        const envName = getEnvironmentName(entityGenState.origin);
+        const safeEnv = sanitizeFilename(envName);
+        const suffix = (safeEnv && safeEnv !== "dataverse-entity") ? safeEnv : "test-data";
+        return `${safeName}-${suffix}.${ext}`;
     }
 
     function downloadFile(content, filename, mimeType) {

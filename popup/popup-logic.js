@@ -169,6 +169,7 @@ function newDataAvailable(response) {
         entityGenState.entityName = entityName;
         entityGenState.entityId = entityId;
         entityGenState.attributes = attributes;
+        entityGenState.origin = origin;
 
         setConnectionStatus(
             "connected",
