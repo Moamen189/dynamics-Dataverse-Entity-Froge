@@ -11,7 +11,8 @@
     "content_scripts": [
         {
             "matches": ["*://*.dynamics.com/*"],
-            "js": ["content.js"]
+            "css": ["preview-modal.css"],
+            "js": ["popup/highlight/highlight.min.js", "content.js"]
         }
     ],
     "web_accessible_resources": [

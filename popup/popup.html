@@ -215,68 +215,6 @@
             </div>
         </div>
 
-        <!-- ═══════════ PREVIEW MODAL ═══════════ -->
-        <div id="previewModal" class="preview-modal-overlay" role="dialog" aria-modal="true" aria-label="Preview generated output" hidden>
-            <div class="preview-modal-card">
-
-                <!-- Header -->
-                <div class="preview-modal-header">
-                    <span class="preview-modal-title">
-                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                            <ellipse cx="8" cy="8" rx="7" ry="5" stroke="currentColor" stroke-width="1.5"/>
-                            <circle cx="8" cy="8" r="2" fill="currentColor"/>
-                        </svg>
-                        Preview
-                    </span>
-                    <button
-                        id="previewCloseX"
-                        class="preview-close-x icon-btn"
-                        type="button"
-                        aria-label="Close preview"
-                        title="Close preview"
-                    >
-                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                            <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                        </svg>
-                    </button>
-                </div>
-
-                <!-- Code Area -->
-                <div class="preview-modal-body">
-                    <div class="code-wrapper preview-code-wrapper">
-                        <pre><code id="previewCodeOutput"></code></pre>
-                    </div>
-                </div>
-
-                <!-- Footer -->
-                <div class="preview-modal-footer">
-                    <button
-                        id="previewCopyBtn"
-                        class="action-btn action-primary"
-                        type="button"
-                        aria-label="Copy generated code to clipboard"
-                        title="Copy to clipboard"
-                    >
-                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                            <rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
-                            <path d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2h-6A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5" stroke="currentColor" stroke-width="1.4"/>
-                        </svg>
-                        <span class="btn-label">Copy</span>
-                    </button>
-                    <button
-                        id="previewCloseBtn"
-                        class="action-btn"
-                        type="button"
-                        aria-label="Close preview"
-                        title="Close preview"
-                    >
-                        Close
-                    </button>
-                </div>
-
-            </div>
-        </div>
-
         <!-- ═══════════ TOAST CONTAINER ═══════════ -->
         <div id="toastContainer" class="toast-container" aria-live="polite" aria-relevant="additions"></div>
 

@@ -25,7 +25,11 @@
     }
 })();
 
+let _buttonsInitialized = false;
+
 function enableButtons() {
+    if (_buttonsInitialized) return;
+    _buttonsInitialized = true;
     // Copy button
     document.getElementById("copyCode").addEventListener(
         "click",
