@@ -13,14 +13,18 @@ Whether you are writing C# unit tests using `XrmRealTime` or the standard SDK, o
 - **⚡ Instant Code Generation**: Instantly parses the active entity record form to extract populated field attributes and metadata.
 - **💻 C# Entity Representation**: Generates standard SDK-compatible C# `Entity` initialization scripts (e.g. `new Entity("account") { ["name"] = "Acme Corp" }`).
 - **🌐 JSON (OData) Output**: Resolves relational lookups and Choice option labels into raw OData-bindable JSON payloads for API requests.
-- **💾 Direct File Downloads**: Download generated configurations directly to your system:
-    - **C#** saves as `<entity-logical-name>-<environment-name>.cs` (e.g. `account-dev.cs`)
-    - **JSON** saves as `<entity-logical-name>-<environment-name>.json` (e.g. `account-dev.json`)
+- **💾 Direct File Downloads**: Download generated configurations directly from the popup or Preview modal:
+    - **C#** saves as `<entity-logical-name>.cs` (e.g. `account.cs`)
+    - **JSON** saves as `<entity-logical-name>.json` (e.g. `account.json`)
 - **📂 Scope Control**: Toggle between generating code only for fields currently present on the active form layout (**Form fields**), or pull all attributes available on the entity (**All fields**).
 - **🚫 Value Filtering**: Exclude empty fields via the **Non-null only** checkbox, or turn it off to generate explicit `null` placeholders.
-- **🔍 Code Preview**: Open a large, scrollable overlay modal to comfortably inspect, scroll, and copy generated C# or JSON code without losing your active layout configuration or triggering extra Dataverse requests.
-- **🌓 Adaptive Theme**: Fully supports professional **Light** and **Dark** modes based on system preferences, with choice persistence across browser restarts.
-- **🔔 Toast Notifications**: Includes a subtle, built-in toast alert overlay for feedback (e.g., download confirmations, copy successes) that remains clear of key user actions.
+- **🖥️ Full-Page Centered Preview Modal**: Opens a large, fixed-position, high-contrast modal overlay directly on top of the active Dynamics 365 page with backdrop blur (`backdrop-filter: blur(3px)`).
+    - **In-Modal Theme Toggle**: Easily switch between Light and Dark themes directly inside the Preview Modal header.
+    - **In-Modal Download & Copy**: Download C# / JSON files or copy code to clipboard with visual `"Copied!"` feedback directly from the modal footer.
+    - **Hardware-Accelerated 60fps Scrolling**: Optimized CSS containment (`contain: layout style paint`) and scroll isolation for ultra-smooth scrolling on large entity definitions.
+    - **Style Isolation**: All modal elements are strictly scoped under `.def-preview-overlay` with maximum z-index positioning (`z-index: 2147483647`), completely immune to page CSS conflicts.
+- **🌓 Adaptive Theme**: Fully supports professional **Light** and **Dark** modes across the extension popup and preview modal, with choice persistence via `chrome.storage.local`.
+- **🔔 Toast Notifications**: Includes built-in toast alerts for clear feedback (e.g., download confirmations, copy successes) that stay out of the way.
 
 ---
 
@@ -71,34 +75,40 @@ Click the **Dataverse Entity Forge** icon on the browser toolbar. The extension 
 - **Output Format**: Click the **C#** or **JSON** buttons to switch formats.
 - **Fields Filter**: Select **Form fields** (only fields rendered on the active form) or **All fields** (queries full client attributes).
 - **Data Toggle**: Toggle **Non-null only** to exclude empty values or include them as standard `null` declarations.
-- **Preview Output**: Click the **Preview** button to launch a larger, easier-to-read scrollable modal displaying the current generated output with syntax highlighting. Copy the output directly from the modal or close the modal (using the Close button, the `✕` icon, clicking the backdrop, or pressing the `Escape` key) to return to your configuration.
+- **Preview Output**: Click the **Preview** button to launch the full-page centered modal overlay directly inside your active Dynamics 365 page.
+    - Inspect syntax-highlighted C# or JSON code.
+    - Toggle Light/Dark mode via the sun/moon icon in the modal header.
+    - Click **Download C#** / **Download JSON** in the modal footer to export files directly.
+    - Click **Copy** to copy raw code to clipboard with visual feedback.
+    - Close the modal by clicking the `✕` icon, the footer **Close** button, clicking the backdrop outside the modal, or pressing `Escape`.
 
 ### 4. Copy or Download
 
-- Click **Copy** to save the code directly to your clipboard. A green success message will confirm the action.
-- Click **C#** or **JSON download buttons** under the code viewer to export the files instantly.
+- Click **Copy** in popup or preview to save code directly to your clipboard.
+- Click **C#** or **JSON** download buttons in popup or preview to export `.cs` or `.json` files instantly.
 
 ---
 
 ## 🏗️ Technical Architecture
 
-The extension uses a secure three-tier message-passing loop designed to respect Dataverse API context isolation:
+The extension uses a secure four-tier architecture designed for isolated DOM manipulation, high-contrast modal rendering, and Dataverse API context safety:
 
 ```
 ┌────────────────────────────────┐
 │         Popup UI Context       │
 │  (popup.html, popup-logic.js)  │
 │  - Builds code configurations  │
-│  - Formats output using HL.js  │
+│  - Triggers Preview modal msg  │
 └────────────────┬───────────────┘
                  │
        chrome.tabs.sendMessage
                  │
  ┌───────────────v───────────────┐
  │      Content Script Bridge    │
- │          (content.js)         │
- │  - Runs in extension sandbox  │
- │  - Relays IPC events          │
+ │ (content.js & preview-modal)  │
+ │  - Renders Page Modal Overlay │
+ │  - Syntax highlighting (HL.js)│
+ │  - Fallback Clipboard & Export│
  └───────────────┬───────────────┘
                  │
           window.postMessage
@@ -112,9 +122,9 @@ The extension uses a secure three-tier message-passing loop designed to respect 
  └───────────────────────────────┘
 ```
 
-1. **Injected Page Worker (`worker.js`)**: Executes inside the page DOM to bypass extension origin limits, gaining direct access to the client API framework context (`Xrm.Page`). It collects attribute names, field values, entity names, and queries metadata mappings (via the `/api/data/v9.2/$metadata` OData Web API endpoint).
-2. **Content Script Bridge (`content.js`)**: Serves as the communication link. Since injected scripts cannot directly communicate with extension popups, `content.js` listens to page messages and forwards them through standard runtime ports.
-3. **Popup Manager (`popup-logic.js`, `popup-preview.js` & helpers)**: Computes C# syntax structures or maps OData bind collections based on active user configurations, rendering results with `highlight.js`. Specifically, `popup-preview.js` handles the overlay modal lifecycle, ensuring the modal exhibits proper responsiveness, scrollability, and matches the active color scheme.
+1. **Injected Page Worker (`worker.js`)**: Executes inside the page DOM to gain direct access to the client API framework context (`Xrm.Page`). It collects attribute names, field values, entity names, and queries metadata mappings (via the `/api/data/v9.2/$metadata` OData Web API endpoint).
+2. **Content Script Bridge & Modal Renderer (`content.js`, `preview-modal.css`)**: Listens to messages from the popup. When receiving `OPEN_ENTITY_FORGE_PREVIEW`, it injects and manages `EntityForgePreviewModal` on `window.top.document.body` as a fixed-position centered overlay (`.def-preview-overlay`) with backdrop blur, scroll containment, and fallback clipboard/download operations.
+3. **Popup Manager (`popup-logic.js`, `popup-preview.js` & helpers)**: Computes C# syntax structures or maps OData bind collections based on user configurations. If the active tab has not initialized content scripts yet, `popup-preview.js` automatically uses `chrome.scripting` to inject `preview-modal.css`, `highlight.min.js`, and `content.js` dynamically without asking the user to refresh the page.
 
 ### 💾 Caching and Performance
 
