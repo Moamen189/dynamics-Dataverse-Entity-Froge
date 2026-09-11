@@ -46,20 +46,6 @@ Dataverse Entity Forge automatically maps complex Microsoft Dataverse field type
 
 ---
 
-## 🛠️ Step-by-Step Installation
-
-Since Dataverse Entity Forge is a developer utility, it is loaded unpacked:
-
-1. **Download/Clone**: Clone this repository or download the ZIP file and extract it to a directory of your choice.
-2. **Open Extensions Page**:
-    - In Google Chrome, go to `chrome://extensions/`
-    - In Microsoft Edge, go to `edge://extensions/`
-3. **Enable Developer Mode**: Turn on the **Developer mode** toggle switch in the top right (or bottom left in older layouts).
-4. **Load Extension**: Click the **Load unpacked** button and select the root directory of this repository (the folder containing `manifest.json`).
-5. **Pin Extension**: Click the extension puzzle icon in the browser toolbar and pin **Dataverse Entity Forge** to your toolbar for easy access.
-
----
-
 ## 📖 Usage Guide
 
 ### 1. Detect Entity Form
