@@ -122,7 +122,7 @@ The extension uses a secure four-tier architecture designed for isolated DOM man
  └───────────────────────────────┘
 ```
 
-1. **Injected Page Worker (`worker.js`)**: Executes inside the page DOM to gain direct access to the client API framework context (`Xrm.Page`). It collects attribute names, field values, entity names, and queries metadata mappings (via the `/api/data/v9.2/$metadata` OData Web API endpoint).
+1. **Injected Page Worker (`worker.js`)**: Executes inside the page DOM to gain direct access to the Dynamics 365 client API. Uses the modern `Xrm.Page.ui.formContext` (non-deprecated path for page-injected scripts) to collect attribute names, field values, and entity metadata. Queries entity set name mappings via the `/api/data/v9.2/$metadata` OData Web API endpoint.
 2. **Content Script Bridge & Modal Renderer (`content.js`, `preview-modal.css`)**: Listens to messages from the popup. When receiving `OPEN_ENTITY_FORGE_PREVIEW`, it injects and manages `EntityForgePreviewModal` on `window.top.document.body` as a fixed-position centered overlay (`.def-preview-overlay`) with backdrop blur, scroll containment, and fallback clipboard/download operations.
 3. **Popup Manager (`popup-logic.js`, `popup-preview.js` & helpers)**: Computes C# syntax structures or maps OData bind collections based on user configurations. If the active tab has not initialized content scripts yet, `popup-preview.js` automatically uses `chrome.scripting` to inject `preview-modal.css`, `highlight.min.js`, and `content.js` dynamically without asking the user to refresh the page.
 

@@ -15,12 +15,15 @@ window.addEventListener("message", (event) => {
 
             try {
                 response.origin = document.location.host; // Dynamics URL
-                response.entityName = Xrm.Page.data.entity.getEntityName();
-                response.entityId = Xrm.Page.data.entity.getId();
+                // (the non-deprecated path for page-injected scripts that lack a formContext parameter)
+                const formContext = Xrm.Page.ui.formContext;
+
+                response.entityName = formContext.data.entity.getEntityName();
+                response.entityId = formContext.data.entity.getId();
 
                 response.attributes = [];
 
-                const rawAttr = Xrm.Page.data.entity.attributes.get();
+                const rawAttr = formContext.data.entity.attributes.get();
                 for (const attr of rawAttr) {
                     const newAttr = {
                         name: attr.getName(),
