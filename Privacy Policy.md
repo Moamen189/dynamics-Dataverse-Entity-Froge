@@ -1,6 +1,6 @@
 # Privacy Policy
 
-**Last Updated: September 19, 2026**
+**Last Updated: September 21, 2026**
 
 Dataverse Entity Forge is a browser extension that helps developers generate Dataverse SDK and Web API code from Microsoft Dataverse form metadata.
 
