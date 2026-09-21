@@ -28,6 +28,10 @@ The extension may generate C# SDK code, OData JSON, and other developer-oriented
 
 This Privacy Policy may be updated from time to time. Any changes will be published on this page with an updated revision date.
 
-## Contact
+## 📞 Support
 
-For questions regarding this Privacy Policy or Dataverse Entity Forge, please contact the developer through the project's official support channel.
+### Getting Help
+
+- **Documentation**: Read this README thoroughly
+- **Issues**: Report bugs via GitHub Issues
+- **Email**: moamen.ashraf1892001@gmail.com
