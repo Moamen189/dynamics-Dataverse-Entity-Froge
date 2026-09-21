@@ -1,0 +1,33 @@
+# Privacy Policy
+
+**Last Updated: September 19, 2026**
+
+Dataverse Entity Forge is a browser extension that helps developers generate Dataverse SDK and Web API code from Microsoft Dataverse form metadata.
+
+## Data Collection
+
+Dataverse Entity Forge does not collect, sell, or share personal information.
+
+The extension processes the data required to perform its functionality locally in the user's browser. Form metadata and other information processed by the extension are not transmitted to or stored on external servers operated by the developer.
+
+## Data Storage
+
+The extension does not maintain a remote database containing user data.
+
+Any information temporarily processed by the extension is used only to provide its functionality and remains within the user's browser unless the user explicitly chooses to export or copy generated content.
+
+## Third-Party Services
+
+Dataverse Entity Forge does not transmit user data to third-party services for analytics, advertising, tracking, or other unrelated purposes.
+
+## Generated Content
+
+The extension may generate C# SDK code, OData JSON, and other developer-oriented output based on the information available in the Dataverse environment. This generated content is controlled by the user and is not collected by the extension.
+
+## Changes to This Privacy Policy
+
+This Privacy Policy may be updated from time to time. Any changes will be published on this page with an updated revision date.
+
+## Contact
+
+For questions regarding this Privacy Policy or Dataverse Entity Forge, please contact the developer through the project's official support channel.
