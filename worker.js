@@ -128,10 +128,7 @@ function xmlToJson(xml) {
             if (typeof obj[nodeName] === "undefined") {
                 obj[nodeName] = xmlToJson(item);
             } else {
-                if (
-                    typeof obj[nodeName] === "object" &&
-                    !Array.isArray(obj[nodeName])
-                ) {
+                if (!Array.isArray(obj[nodeName])) {
                     obj[nodeName] = [obj[nodeName]];
                 }
                 obj[nodeName].push(xmlToJson(item));
