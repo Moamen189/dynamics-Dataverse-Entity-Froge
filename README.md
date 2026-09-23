@@ -1,5 +1,9 @@
 # 🛠️ Dataverse Entity Forge
 
+![Version](https://img.shields.io/badge/version-2.1-blue.svg)
+![Manifest](https://img.shields.io/badge/manifest-v3-green.svg)
+![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)
+
 ![Dataverse Entity Forge Cover](icons/Dataverse%20Entity%20Forge%20Cover.png)
 
 **Dataverse Entity Forge** is a modern, high-productivity developer utility extension for Google Chrome and Microsoft Edge. It is designed to assist Microsoft Power Apps, Dataverse, and Dynamics 365 developers in instantly generating test data representation and entity metadata scripts directly from active record forms.
@@ -118,6 +122,14 @@ To avoid hitting the Dataverse Metadata API repeatedly on form loads:
 
 - Entity Set OData Bindings are automatically cached locally using **Chrome Storage (`chrome.storage.local`)**.
 - Cache TTL is set to **5 days**. The cache automatically evicts the least recently used (LRU) entity records if storage usage approaches the **5MB** limit.
+
+---
+
+## 📞 Support & Community
+
+- **Bugs & Feature Requests**: Submit an issue via [GitHub Issues](https://github.com/Moamen189/dynamics-entitycodegen-main/issues)
+- **Direct Inquiries / Support**: [moamen.ashraf1892001@gmail.com](mailto:moamen.ashraf1892001@gmail.com)
+- **Privacy Policy**: Read our [Privacy Policy](Privacy_Policy.md)
 
 ---
 
